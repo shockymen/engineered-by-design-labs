@@ -45,7 +45,9 @@ Where the agent expects it could be wrong (so the tests aim there):
 - Job: `chapter-12-void-run` — successful.
 - PostgreSQL: 16.16 on GitHub-hosted Ubuntu runner; isolated database service.
 - Results: **12 of 12 checks passed**. These include the deliberately unsafe control reproducing the forbidden state, 100 safe void/payment races (6 void wins, 94 payment wins, 0 violations), 16 concurrent identical voids resulting in one void event, re-finalization with preserved revision history, and database-enforced rejection of bypass attempts.
-- Evidence: workflow job logs and uploaded `void-run-results` artifact for the run. Expected PostgreSQL foreign-key/check violations in the logs are intentional negative tests, not unexpected job failures.
+- Evidence: workflow job logs, uploaded `void-run-results` artifact for the run, and [run #6 result JSON](../../../evidence/chapter-12-void-run/void_results_run6.json) committed to `evidence/`.
+- Run #6 archived race outcomes: 13 void wins and 87 payment wins, with zero observed invariant violations. These may differ from an earlier race schedule (6/94); both schedules passed.
+- The **first frozen attempt passed all checks without corrective code edits**, as recorded in the post-run assessment. Expected PostgreSQL foreign-key/check violations in the logs are intentional negative tests, not unexpected job failures.
 
 To reproduce locally:
 ```
