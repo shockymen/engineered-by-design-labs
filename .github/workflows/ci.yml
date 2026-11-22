@@ -48,10 +48,9 @@ jobs:
           path: labs/chapter-12/lab/results.json
           if-no-files-found: ignore
 
-  # Experimental: first run still pending. A failure here does not fail the repository checks.
+  # Previously experimental; initial 12-check PostgreSQL CI run passed.
   chapter-12-void-run:
     runs-on: ubuntu-latest
-    continue-on-error: true
     services:
       postgres:
         image: postgres:16
