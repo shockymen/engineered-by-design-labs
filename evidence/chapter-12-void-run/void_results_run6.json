@@ -1,0 +1,74 @@
+{
+  "run_at_utc": "2026-11-22T19:26:16+00:00",
+  "postgres_version": "PostgreSQL 16.16 (Debian 16.16-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "default_isolation_level": "read committed",
+  "psycopg_version": "3.3.9",
+  "race_trials": 100,
+  "race_outcomes": {
+    "void_won": 13,
+    "payment_won": 87
+  },
+  "checks": [
+    {
+      "check": "CONTROL check-then-void violates R1",
+      "result": "PASS",
+      "detail": "run status=VOIDED, payments=1 (the rule says these cannot both hold)"
+    },
+    {
+      "check": "SAFE void and payment never both succeed (R1 under race)",
+      "result": "PASS",
+      "detail": "100 trials: void won 13, payment won 87, violations 0"
+    },
+    {
+      "check": "Void is refused once a payment exists",
+      "result": "PASS",
+      "detail": "result=payments_submitted, run status=ACTIVE, VOIDED outbox events=0"
+    },
+    {
+      "check": "Concurrent identical voids are idempotent",
+      "result": "PASS",
+      "detail": "16 requests -> 1 voided, 15 already_voided, 1 VOIDED event(s), 0 errors"
+    },
+    {
+      "check": "Void with a different reason is a conflict, not a silent success",
+      "result": "PASS",
+      "detail": "result=conflict"
+    },
+    {
+      "check": "Re-finalizing after a void creates revision 2 and keeps history",
+      "result": "PASS",
+      "detail": "status=created, rows=[(1, 'VOIDED'), (2, 'ACTIVE')], outbox events=3 (expected 3)"
+    },
+    {
+      "check": "Retrying the void of revision 1 does not touch revision 2",
+      "result": "PASS",
+      "detail": "retry=already_voided, revision 2 status=ACTIVE"
+    },
+    {
+      "check": "Finalizing while a run is ACTIVE returns the existing run",
+      "result": "PASS",
+      "detail": "result=existing"
+    },
+    {
+      "check": "Concurrent re-finalize after a void yields one new ACTIVE run",
+      "result": "PASS",
+      "detail": "16 requests -> 1 created, 15 existing, 1 active, 2 total rows, 0 errors"
+    },
+    {
+      "check": "Payment on a voided run is rejected",
+      "result": "PASS",
+      "detail": "result=run_not_active, payments=0"
+    },
+    {
+      "check": "Crash during void rolls back status and outbox together",
+      "result": "PASS",
+      "detail": "after injected failure: status=ACTIVE, VOIDED events=0"
+    },
+    {
+      "check": "The database enforces R1 even when application code is bypassed",
+      "result": "PASS",
+      "detail": "raw UPDATE to VOIDED with a payment: ForeignKeyViolation; raw INSERT with run_status VOIDED: CheckViolation"
+    }
+  ],
+  "all_passed": true
+}
