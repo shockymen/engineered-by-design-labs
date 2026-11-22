@@ -19,3 +19,7 @@ Record the terminal output and `lab/void_results.json` exactly as produced, incl
 ## Limits
 
 Same scope as Chapter 12: one PostgreSQL instance, concurrent connections inside one test process, default `READ COMMITTED` isolation, no external payment provider, no operating-system process crashes.
+
+## Archived CI execution evidence
+
+The frozen first implementation passed its initial PostgreSQL CI execution without corrective code edits. The later required-CI [run #6](https://github.com/shockymen/engineered-by-design-labs/actions/runs/45060703902) passed all 12 checks (100 safe race trials: 13 void wins, 87 payment wins, zero violations). Its [results JSON](../../evidence/chapter-12-void-run/void_results_run6.json) is committed for long-term reference.
