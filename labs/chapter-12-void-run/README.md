@@ -2,7 +2,7 @@
 
 A follow-on lab that adds one business rule to the Chapter 12 model: **a finalized run may be voided only before any payment has been submitted**, and a voided period may get a new revision. The rule is enforced by a composite foreign key, so it holds even when application code is bypassed. This lab is a teaching example, not production payroll software. **Run only against a disposable database: the harness truncates tables.**
 
-**Status: first run pending.** The code and tests were written and frozen before any run. See `agent-session/SESSION.md` for the recorded AI-agent workflow, and `agent-session/attempt1/` for the first attempt, which must not be edited.
+**Status: first run completed and passed (12/12 checks).** The frozen first attempt ran against PostgreSQL 16.16 on GitHub Actions at commit `2ea964fb0352117592f99f5ccd7193cda051033c` ([run and logs](https://github.com/shockymen/engineered-by-design-labs/actions/runs/45056431569)). The test included 100 competing void/payment trials, with zero observed violations of the tested invariant. See `agent-session/SESSION.md` for the recorded AI-agent workflow and post-run review, and `agent-session/attempt1/` for the preserved first attempt. This is an observed test result, not a proof of safety under all schedules or environments.
 
 ## Run it
 
