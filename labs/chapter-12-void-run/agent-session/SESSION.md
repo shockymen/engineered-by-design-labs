@@ -1,10 +1,10 @@
 # Agent session record: voiding a finalized payroll run
 
-**Status:** steps 1-3 done, step 4 (running the tests) pending. Nothing below has been run against PostgreSQL yet.
+**Status:** Steps 1–4 complete: the frozen initial implementation was executed against PostgreSQL in GitHub Actions and all 12 checks passed. The post-run assessment is recorded below; model/tool-version metadata still needs to be recovered from the original chat if available.
 
 ## Provenance (state this in the chapter)
 - Agent: Claude (Anthropic), in a chat session with the author. Model and tool versions: record from the session before publishing.
-- This is **not a clean-room session**. The agent already knew the project, the earlier lab and the chapter's thesis. The agent could not run PostgreSQL in its sandbox, so every result comes from the author's machine.
+- This is **not a clean-room session**. The agent already knew the project, the earlier lab and the chapter's thesis. The agent could not run PostgreSQL in its sandbox. The preserved implementation was subsequently tested by GitHub Actions against PostgreSQL; earlier local-run results belong to the separate Chapter 12 baseline.
 - Business decisions in step 1 were made by the human. Everything else was proposed by the agent.
 
 ## Step 1: requirements challenge
@@ -38,13 +38,27 @@ Where the agent expects it could be wrong (so the tests aim there):
 - revision numbering when two re-finalizations compute the same next revision;
 - `ON CONFLICT DO NOTHING` without a target catching an unintended conflict.
 
-## Step 4: run it
+## Step 4: executed run and evidence
+
+- GitHub Actions workflow: https://github.com/shockymen/engineered-by-design-labs/actions/runs/45056431569
+- Tested commit: `2ea964fb0352117592f99f5ccd7193cda051033c`
+- Job: `chapter-12-void-run` — successful.
+- PostgreSQL: 16.16 on GitHub-hosted Ubuntu runner; isolated database service.
+- Results: **12 of 12 checks passed**. These include the deliberately unsafe control reproducing the forbidden state, 100 safe void/payment races (6 void wins, 94 payment wins, 0 violations), 16 concurrent identical voids resulting in one void event, re-finalization with preserved revision history, and database-enforced rejection of bypass attempts.
+- Evidence: workflow job logs and uploaded `void-run-results` artifact for the run. Expected PostgreSQL foreign-key/check violations in the logs are intentional negative tests, not unexpected job failures.
+
+To reproduce locally:
 ```
 # start PostgreSQL from labs/chapter-12:  docker compose up -d --wait
 # then, from labs/chapter-12-void-run:
 python lab/void_lab.py
 ```
-Paste back the terminal output and `lab/void_results.json`. Record failures as they are.
+Record terminal output and `lab/void_results.json` exactly as produced, including any failures.
 
-## Step 5: after the run
-Record each failure, the agent's diagnosis and fix as a diff against `attempt1/`, and the final passing results. If attempt 1 passes everything, record that too.
+## Step 5: post-run engineering assessment
+
+**Observed:** The first frozen agent-generated implementation passed the 12 checks without a corrective code change in this recorded execution. The database constraint rejected the unsafe payment/void combination in the tested race schedules; the negative-control test reproduced the forbidden state without the database guard.
+
+**Decision:** Accept the design only for the narrow laboratory invariant and tested environment. Do **not** infer safety under process termination, network partitions, an external payment provider, arbitrary transaction schedules or production workloads. In particular, 100 passing races are evidence, not a mathematical proof. No correction diff was needed after the first run.
+
+**Provenance still outstanding:** The original Claude model/version, exact tool versions and complete conversation transcript have not been published in this session record. Do not describe this as a complete agent transcript until those are supplied.
