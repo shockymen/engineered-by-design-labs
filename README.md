@@ -20,11 +20,11 @@ Reported runs from November 2026:
 | Python against PostgreSQL 16.16 | 8 of 8 checks passed | [Python result record](evidence/chapter-12/results_user_supplied.json) |
 | TypeScript against PostgreSQL | 3 of 3 scenarios passed | [TypeScript console transcript](evidence/chapter-12/typescript_console_user_supplied.txt) |
 
-**Evidence provenance:** These outputs were supplied by the author from a local Mac + Docker run. The Python result came from an earlier revision of the script than the one in this repository (details in [PROVENANCE](evidence/chapter-12/PROVENANCE.md)), and a re-run is pending. GitHub Actions runs on each push are the independent check. The tests include *expected demonstrations of unsafe behavior*. A PASS does not mean an unsafe design is acceptable.
+**Evidence provenance:** These outputs were supplied by the author from a local Mac + Docker run. The Python result came from an earlier revision of the script than the one in this repository (details in [PROVENANCE](evidence/chapter-12/PROVENANCE.md)), and the shipped revision was subsequently executed successfully in [GitHub Actions](https://github.com/shockymen/engineered-by-design-labs/actions/runs/45056431569). GitHub Actions runs on each push are the independent check. The tests include *expected demonstrations of unsafe behavior*. A PASS does not mean an unsafe design is acceptable.
 
 ## Also in this repository
 
-**[Voiding a finalized run (experimental)](labs/chapter-12-void-run/README.md):** a follow-on lab with a database-enforced "no void once paid" rule, plus the recorded AI-agent workflow that produced it. First run pending; the code was frozen before any run.
+**[Voiding a finalized run (experimental)](labs/chapter-12-void-run/README.md):** a follow-on lab with a database-enforced "no void once paid" rule, plus the recorded AI-agent workflow that produced it. The frozen first attempt passed all 12 checks in [GitHub Actions](https://github.com/shockymen/engineered-by-design-labs/actions/runs/45056431569); the session record now links the observed evidence.
 
 ## Guarantees and limits
 
