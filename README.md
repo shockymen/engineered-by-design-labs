@@ -24,7 +24,7 @@ Reported runs from November 2026:
 
 ## Also in this repository
 
-**[Voiding a finalized run (experimental)](labs/chapter-12-void-run/README.md):** a follow-on lab with a database-enforced "no void once paid" rule, plus the recorded AI-agent workflow that produced it. The frozen first attempt passed all 12 checks in [GitHub Actions](https://github.com/shockymen/engineered-by-design-labs/actions/runs/45056431569); the session record now links the observed evidence.
+**[Voiding a finalized run (experimental)](labs/chapter-12-void-run/README.md):** a follow-on lab with a database-enforced "no void once paid" rule, plus the recorded AI-agent workflow that produced it. The frozen first attempt passed all 12 checks in [GitHub Actions](https://github.com/shockymen/engineered-by-design-labs/actions/runs/45056431569); the session record now links the observed evidence. The [run #6 result JSON](evidence/chapter-12-void-run/void_results_run6.json) is archived in Git.
 
 ## Guarantees and limits
 
