@@ -1,0 +1,88 @@
+name: labs
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  chapter-12:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: meridian
+          POSTGRES_PASSWORD: meridian
+          POSTGRES_DB: meridian
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U meridian -d meridian"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      PG_DSN: postgresql://meridian:meridian@localhost:5433/meridian
+    defaults:
+      run:
+        working-directory: labs/chapter-12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Python concurrency lab
+        run: python lab/pg_concurrency_lab.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+      - name: TypeScript reference tests
+        run: npm test
+      - name: Upload recorded results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter-12-results
+          path: labs/chapter-12/lab/results.json
+          if-no-files-found: ignore
+
+  # Experimental: first run still pending. A failure here does not fail the repository checks.
+  chapter-12-void-run:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: meridian
+          POSTGRES_PASSWORD: meridian
+          POSTGRES_DB: meridian
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U meridian -d meridian"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      PG_DSN: postgresql://meridian:meridian@localhost:5433/meridian
+    defaults:
+      run:
+        working-directory: labs/chapter-12-void-run
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Void-a-run lab
+        run: python lab/void_lab.py
+      - name: Upload recorded results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: void-run-results
+          path: labs/chapter-12-void-run/lab/void_results.json
+          if-no-files-found: ignore

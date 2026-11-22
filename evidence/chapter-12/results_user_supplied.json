@@ -1,0 +1,49 @@
+{
+  "run_at_utc": "2026-11-22T04:32:45+00:00",
+  "postgres_version": "PostgreSQL 16.16 (Debian 16.16-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "default_isolation_level": "read committed",
+  "psycopg_version": "3.3.9",
+  "checks": [
+    {
+      "check": "UNSAFE check-then-insert produces duplicates",
+      "result": "PASS",
+      "detail": "2 concurrent requests produced 2 payroll rows (expected 2: the race)"
+    },
+    {
+      "check": "SAFE finalization is unique under competition",
+      "result": "PASS",
+      "detail": "32 requests -> 1 run, 1 outbox row, 1 created, 31 existing, 0 errors, 1 distinct run id(s) returned"
+    },
+    {
+      "check": "Conflicting approval versions are surfaced, not hidden",
+      "result": "PASS",
+      "detail": "1 run (winning version 1); 4 of 4 mismatched requests reported a conflict; 0 errors"
+    },
+    {
+      "check": "Crash before commit rolls back run and outbox together",
+      "result": "PASS",
+      "detail": "after injected failure: 0 runs, 0 outbox rows (expected 0 and 0)"
+    },
+    {
+      "check": "Retry after the crash succeeds exactly once",
+      "result": "PASS",
+      "detail": "retry status=created: 1 run, 1 outbox row"
+    },
+    {
+      "check": "Uniqueness is scoped per tenant",
+      "result": "PASS",
+      "detail": "same period, two tenants -> 2 runs (a global unique period would give 1)"
+    },
+    {
+      "check": "UNSAFE read-modify-write loses updates",
+      "result": "PASS",
+      "detail": "16 increments produced a final value of 1 (lost updates)"
+    },
+    {
+      "check": "SELECT ... FOR UPDATE serializes the same update",
+      "result": "PASS",
+      "detail": "16 increments produced a final value of 16"
+    }
+  ],
+  "all_passed": true
+}

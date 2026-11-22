@@ -1,0 +1,11 @@
+npm install
+added 21 packages, and audited 22 packages in 3s
+found 0 vulnerabilities
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts: esbuild@0.28.2
+
+> test
+> tsx reference/finalize.test.ts
+PASS: 32 concurrent requests -> 1 run, 1 outbox row, 1 created
+PASS: different approval version rejected with ApprovalConflictError
+PASS: crash rolled back run + outbox; retry created exactly one of each
+ALL TYPESCRIPT CHECKS PASSED
